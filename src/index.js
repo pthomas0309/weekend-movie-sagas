@@ -43,7 +43,7 @@ function* fetchMovieDetails(action) {
         const response = yield axios.get(`/api/genre/?movieId=${action.payload}`)
 
         // use put to set reducer with response data
-        put({
+        yield put({
             type: 'SET_GENRES',
             payload: response.data
         });
