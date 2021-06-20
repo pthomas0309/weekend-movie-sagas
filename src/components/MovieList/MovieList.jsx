@@ -27,7 +27,7 @@ function MovieList() {
         
         // history.push navigates to 
         // /details/idOfTheMoviePosterClicked
-        history.push(`/details/${movie.id}`);
+        history.push(`/${movie.id}/details`);
     };
 
     return (
