@@ -4,8 +4,13 @@ const pool = require('../modules/pool')
 
 router.get('/', (req, res) => {
 
-  const query = `SELECT * FROM movies ORDER BY "title" ASC`;
-  pool.query(query)
+  // this conditional path runs a query
+  // that grabs all of the table data
+  // from movies if a movie id is 
+  // not specified in the request query
+  if (req.query.movieId === undefined) {
+    const query = `SELECT * FROM movies ORDER BY "title" ASC`;
+    pool.query(query)
     .then( result => {
       res.send(result.rows);
     })
@@ -13,6 +18,26 @@ router.get('/', (req, res) => {
       console.log('ERROR: Get all movies', err);
       res.sendStatus(500)
     })
+  } 
+  
+  // this conditional path runs a query
+  // that grabs one table row by its id
+  // from movies if a movie id is 
+  // specified in the request query
+  else {
+    const movieId = req.query.movieId
+
+    const query = `SELECT * FROM movies WHERE "movies".id = $1`;
+    pool.query(query, [movieId])
+    .then( result => {
+      res.send(result.rows);
+    })
+    .catch(err => {
+      console.log('ERROR: Get featured movies', err);
+      res.sendStatus(500)
+    })
+  }
+  
 
 });
 

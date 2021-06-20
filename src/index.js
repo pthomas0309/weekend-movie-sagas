@@ -17,6 +17,9 @@ function* rootSaga() {
 
     // listen for the FETCH_GENRES command
     yield takeEvery('FETCH_GENRES', fetchMovieDetails);
+
+    // listen for the FETCH_FEATURED command
+    yield takeEvery('FETCH_FEATURED', fetchFeatured)
 }
 
 function* fetchAllMovies() {
@@ -32,7 +35,7 @@ function* fetchAllMovies() {
         
 }
 
-// saga generator to run the get request
+// saga generator to run the genres get request
 function* fetchMovieDetails(action) {
 
     // try wrapper runs if there's no err
@@ -55,14 +58,41 @@ function* fetchMovieDetails(action) {
     }
 }
 
+// saga generator to run a get request that will grab
+// one row from movies targeted by id
+function* fetchFeatured(action) {
+
+    // try wrapper runs if there's not an error
+    try {
+
+        // set response equal to the result of
+        // the axios get
+        const response = yield axios.get(`/api/movie/?movieId=${action.payload}`)
+        console.log('Featured movie is: ', response.data);
+
+        // use put to set state of reducer
+        yield put({
+            type: 'SET_FEATURED',
+            payload: response.data[0]
+        });
+    }
+
+    // catch for error
+    catch (err) {
+        console.error('There was an error getting featured movie data', err);
+    };
+};
+
 // Create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
 
 // Used to store movies returned from the server
-const movies = (state = [], action) => {
+const movies = (state = {featured: {}, movieList: []}, action) => {
     switch (action.type) {
         case 'SET_MOVIES':
-            return action.payload;
+            return {...state, movieList: action.payload};
+        case 'SET_FEATURED':
+            return { ...state, featured: action.payload}
         default:
             return state;
     }
