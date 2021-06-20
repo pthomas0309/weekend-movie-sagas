@@ -18,9 +18,17 @@ function MovieList() {
         dispatch({ type: 'FETCH_MOVIES' });
     }, []);
 
-    const redirectDetails = movieId => {
-        history.push(`/details/${movieId}`)
-    }
+    // function to handle redirect, takes in info of
+    // the movie poster that was clicked on
+    const redirectDetails = movie => {
+
+        // alert for the redirect
+        alert(`Moving to the details page of the movie ${movie.title} at id ${movie.id}`);
+        
+        // history.push navigates to 
+        // /details/idOfTheMoviePosterClicked
+        history.push(`/details/${movie.id}`);
+    };
 
     return (
         <main>
@@ -33,7 +41,7 @@ function MovieList() {
 
                             {/* clicking on the movie poster will redirect
                             to the details page on the movie */}
-                            <img onClick={() => {redirectDetails(movie.id)}} src={movie.poster} alt={movie.title}/>
+                            <img onClick={() => {redirectDetails(movie)}} src={movie.poster} alt={movie.title}/>
                         </div>
                     );
                 })}
@@ -41,6 +49,6 @@ function MovieList() {
         </main>
 
     );
-}
+};
 
 export default MovieList;
