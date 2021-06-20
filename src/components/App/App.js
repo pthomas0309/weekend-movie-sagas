@@ -2,6 +2,9 @@ import {HashRouter as Router, Route} from 'react-router-dom';
 import './App.css';
 import MovieList from '../MovieList/MovieList'
 
+// brin in DetailsView component
+import DetailsView from '../DetailsView/DetailsView';
+
 function App() {
   return (
     <div className="App">
@@ -12,6 +15,9 @@ function App() {
         </Route>
         
         {/* Details page */}
+        <Route path='/details/:movieId'>
+          <DetailsView />
+        </Route>
 
         {/* Add Movie page */}
       </Router>
