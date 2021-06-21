@@ -80,7 +80,7 @@ function MovieForm() {
 
     // function to cancel the new movie submission
     const cancelSubmission = () => {
-        
+
         // clear inputs
         setNewMovie({
             title: '',
@@ -114,7 +114,7 @@ function MovieForm() {
                 <option value="12" >Space-Opera</option>
                 <option value="13" >Superhero</option>
             </select><br/>
-            <input type="submit" />
+            <input type="submit" value="Save"/>
             <input type="button" value="Cancel" onClick={cancelSubmission} />
         </form>
     )
