@@ -19,7 +19,7 @@ function MovieForm() {
     // create newMovie variable with the useState function
     const [newMovie, setNewMovie] = useState({
         title: '',
-        poster: '',
+        poster: 'images/image-not-found.png',
         description: '',
         genre_id: ''
     });
@@ -60,10 +60,10 @@ function MovieForm() {
             });
             console.log(newMovie);
 
-            // clear inputs
+            // reset inputs
             setNewMovie({
                 title: '',
-                poster: '',
+                poster: 'images/image-not-found.png',
                 description: '',
                 genres: ''
             });
@@ -81,10 +81,10 @@ function MovieForm() {
     // function to cancel the new movie submission
     const cancelSubmission = () => {
 
-        // clear inputs
+        // reset inputs
         setNewMovie({
             title: '',
-            poster: '',
+            poster: 'images/image-not-found.png',
             description: '',
             genres: ''
         });
@@ -95,25 +95,34 @@ function MovieForm() {
 
     return (
         <form onSubmit={event => addMovie(event)}>
-            <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.title} name="title" id="titleIn" required/><br/>
-            <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.poster} name="poster" id="posterIn" required/><br/>
-            <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.description} name="description" id="descriptionIn" required/><br/>
-            <select onChange={ (event) => {updateMovie(event)}} name="genre_id" value={newMovie.genres} id="genre_idIn" required>
-                <option value="0" >Choose Genre</option>
-                <option value="1" >Adventure</option>
-                <option value="2" >Animated</option>
-                <option value="3" >Biographical</option>
-                <option value="4" >Comedy</option>
-                <option value="5" >Disaster</option>
-                <option value="6" >Drama</option>
-                <option value="7" >Epic</option>
-                <option value="8" >Fantasy</option>
-                <option value="9" >Musical</option>
-                <option value="10" >Romantic</option>
-                <option value="11" >Science Fiction</option>
-                <option value="12" >Space-Opera</option>
-                <option value="13" >Superhero</option>
-            </select><br/>
+            <label htmlFor="titleIn">Movie Title:
+                <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.title} name="title" id="titleIn" required/>
+            </label><br/>
+            <label htmlFor="posterIn">Poster Image Path: 
+                <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.poster} name="poster" id="posterIn" required/>
+           (defaults to placeholder image) </label><br/>
+            <label htmlFor="descriptionIn">Movie Description: 
+                <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.description} name="description" id="descriptionIn" required/>
+            </label><br/>
+            <label htmlFor="genre_idIn">Choose a Genre
+                <select onChange={ (event) => {updateMovie(event)}} name="genre_id" value={newMovie.genres} id="genre_idIn" required>
+                    <option value="0" >Choose Genre</option>
+                    <option value="1" >Adventure</option>
+                    <option value="2" >Animated</option>
+                    <option value="3" >Biographical</option>
+                    <option value="4" >Comedy</option>
+                    <option value="5" >Disaster</option>
+                    <option value="6" >Drama</option>
+                    <option value="7" >Epic</option>
+                    <option value="8" >Fantasy</option>
+                    <option value="9" >Musical</option>
+                    <option value="10" >Romantic</option>
+                    <option value="11" >Science Fiction</option>
+                    <option value="12" >Space-Opera</option>
+                    <option value="13" >Superhero</option>
+                </select>
+            </label><br/>
+            
             <input type="submit" value="Save"/>
             <input type="button" value="Cancel" onClick={cancelSubmission} />
         </form>
