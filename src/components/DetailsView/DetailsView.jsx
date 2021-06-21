@@ -7,6 +7,9 @@ import { useEffect } from 'react';
 // bring in useDispatch & useSelector
 import { useDispatch, useSelector } from 'react-redux'
 
+// bring in css
+import './DetailsView.css'
+
 function DetailsView() {
 
     // bring in both reducer states
@@ -56,7 +59,8 @@ function DetailsView() {
                 <p>{movies.featured.description}</p>
             </div>
 
-            <ul>
+            <h4>Movie Genres</h4>
+            <ul className="genre-list">
                 {genres?.genre.map( (genre, i) => {
                     return <li key={i} >{genre}</li>
                 })}
