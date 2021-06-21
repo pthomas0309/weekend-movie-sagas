@@ -44,7 +44,7 @@ function MovieForm() {
         const genresIn = event.target.querySelector('#genresIn').value
 
         // conditional for form validation
-        if (titleIn != '' && posterIn != '' && descriptionIn != '' && genresIn != 'Choose Genre') {
+        if (titleIn != '' && posterIn != '' && descriptionIn != '' && genresIn != 0) {
             // dispatch POST command to root 
             // type ADD_MOVIE payload new movie object
             dispatch({
@@ -74,8 +74,20 @@ function MovieForm() {
             <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.poster} name="poster" id="posterIn" required/><br/>
             <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.description} name="description" id="descriptionIn" required/><br/>
             <select onChange={ (event) => {updateMovie(event)}} name="genres" value={newMovie.genres} id="genresIn" required>
-                <option>Choose Genre</option>
-                <option>Placeholder</option>
+                <option value="0" >Choose Genre</option>
+                <option value="1" >Adventure</option>
+                <option value="2" >Animated</option>
+                <option value="3" >Biographical</option>
+                <option value="4" >Comedy</option>
+                <option value="5" >Disaster</option>
+                <option value="6" >Drama</option>
+                <option value="7" >Epic</option>
+                <option value="8" >Fantasy</option>
+                <option value="9" >Musical</option>
+                <option value="10" >Romantic</option>
+                <option value="11" >Science Fiction</option>
+                <option value="12" >Space-Opera</option>
+                <option value="13" >Superhero</option>
             </select>
             <input type="submit" />
         </form>
