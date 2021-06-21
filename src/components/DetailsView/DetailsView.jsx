@@ -7,10 +7,19 @@ import { useEffect } from 'react';
 // bring in useDispatch & useSelector
 import { useDispatch, useSelector } from 'react-redux'
 
+// bring in edit view
+import EditMovie from '../EditMovie/EditMovie'
+
+// bring in route capability
+import {HashRouter as Router, Route, useRouteMatch} from 'react-router-dom';
+
 // bring in css
 import './DetailsView.css'
 
 function DetailsView() {
+
+    // deconstruct useRouteMatch
+    const { path, url } = useRouteMatch();
 
     // bring in both reducer states
     const movies = useSelector(store => store.movies);
@@ -49,24 +58,37 @@ function DetailsView() {
         history.goBack();
     };
 
+    const navigateToEdit = () => {
+        history.push(`${url}/edit`)
+    }
+
     console.log(movies);
     console.log(genres?.genre);
     return (
         <>
-            <div key={movies.featured.id} >
-                <h3>{movies.featured.title}</h3>
-                <img src={movies.featured.poster} alt={movies.featured.title} />
-                <p>{movies.featured.description}</p>
-            </div>
+            <Router>
+                <Route path={`${path}`} exact>
+                    <div key={movies.featured.id} >
+                        <h3>{movies.featured.title}</h3>
+                        <img src={movies.featured.poster} alt={movies.featured.title} />
+                        <p>{movies.featured.description}</p>
+                    </div>
 
-            <h4>Movie Genres</h4>
-            <ul className="genre-list">
-                {genres?.genre.map( (genre, i) => {
-                    return <li key={i} >{genre}</li>
-                })}
-            </ul>
+                    <h4>Movie Genres</h4>
+                    <ul className="genre-list">
+                        {genres?.genre.map( (genre, i) => {
+                            return <li key={i} >{genre}</li>
+                        })}
+                    </ul>
 
-            <button onClick={navigateBack} >Back To Home</button>
+                    <button onClick={navigateBack} >Back To Home</button>
+                    <button onClick={navigateToEdit} >Edit</button>
+                </Route>
+
+                <Route path={`${path}/edit`}>
+                    <EditMovie />
+                </Route>
+            </Router>
         </>
     );
 };
