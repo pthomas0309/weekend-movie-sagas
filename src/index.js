@@ -15,6 +15,9 @@ import axios from 'axios';
 function* rootSaga() {
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
 
+    // listen for the ADD_MOVIE command
+    yield takeEvery('ADD_MOVIE', addNewMovie)
+
     // listen for the FETCH_GENRES command
     yield takeEvery('FETCH_GENRES', fetchMovieDetails);
 
@@ -33,6 +36,27 @@ function* fetchAllMovies() {
         console.log('get all error');
     }
         
+}
+
+// saga generator to run the /api/movie POST
+function* addNewMovie(action) {
+
+    // tru wrapper runs if there's no err
+    try {
+
+        // run axios POST
+        yield axios.post('/api/movie', action.payload)
+
+        // use put to run movies GET request again
+        yield put({
+            type: 'FETCH_MOVIES'
+        });
+    }
+
+    // catch for error
+    catch (err) {
+        console.error('There was an error adding new movie', err);
+    }
 }
 
 // saga generator to run the genres get request

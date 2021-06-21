@@ -4,17 +4,24 @@ import { useState } from 'react';
 // bring in useDispatch
 import { useDispatch } from 'react-redux';
 
+// bring in useHistory
+import { useHistory } from 'react-router';
+
+
 function MovieForm() {
 
     // make useDispatch available as  dispatch
     const dispatch = useDispatch();
+
+    // make useHistory available as history
+    const history = useHistory();
 
     // create newMovie variable with the useState function
     const [newMovie, setNewMovie] = useState({
         title: '',
         poster: '',
         description: '',
-        genres: ''
+        genre_id: ''
     });
 
     // function to update the newMovie
@@ -41,10 +48,10 @@ function MovieForm() {
         const titleIn = event.target.querySelector('#titleIn').value
         const posterIn = event.target.querySelector('#posterIn').value
         const descriptionIn = event.target.querySelector('#descriptionIn').value
-        const genresIn = event.target.querySelector('#genresIn').value
+        const genre_idIn = event.target.querySelector('#genre_idIn').value
 
         // conditional for form validation
-        if (titleIn != '' && posterIn != '' && descriptionIn != '' && genresIn != 0) {
+        if (titleIn != '' && posterIn != '' && descriptionIn != '' && genre_idIn != 0) {
             // dispatch POST command to root 
             // type ADD_MOVIE payload new movie object
             dispatch({
@@ -60,6 +67,9 @@ function MovieForm() {
                 description: '',
                 genres: ''
             });
+
+            // navigate back to home page
+            history.push('/');
         }
 
         // alert if any inputs are left blank or in default values
@@ -68,12 +78,27 @@ function MovieForm() {
         }
     };
 
+    // function to cancel the new movie submission
+    const cancelSubmission = () => {
+        
+        // clear inputs
+        setNewMovie({
+            title: '',
+            poster: '',
+            description: '',
+            genres: ''
+        });
+
+        // navigate back to home page
+        history.push('/');
+    }
+
     return (
         <form onSubmit={event => addMovie(event)}>
             <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.title} name="title" id="titleIn" required/><br/>
             <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.poster} name="poster" id="posterIn" required/><br/>
             <input onChange={ (event) => {updateMovie(event)}} type="text" value={newMovie.description} name="description" id="descriptionIn" required/><br/>
-            <select onChange={ (event) => {updateMovie(event)}} name="genres" value={newMovie.genres} id="genresIn" required>
+            <select onChange={ (event) => {updateMovie(event)}} name="genre_id" value={newMovie.genres} id="genre_idIn" required>
                 <option value="0" >Choose Genre</option>
                 <option value="1" >Adventure</option>
                 <option value="2" >Animated</option>
@@ -88,8 +113,9 @@ function MovieForm() {
                 <option value="11" >Science Fiction</option>
                 <option value="12" >Space-Opera</option>
                 <option value="13" >Superhero</option>
-            </select>
+            </select><br/>
             <input type="submit" />
+            <input type="button" value="Cancel" onClick={cancelSubmission} />
         </form>
     )
 };
