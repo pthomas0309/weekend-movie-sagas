@@ -22,7 +22,10 @@ function* rootSaga() {
     yield takeEvery('FETCH_FEATURED_GENRES', fetchMovieDetails);
 
     // listen for the FETCH_FEATURED command
-    yield takeEvery('FETCH_FEATURED', fetchFeatured)
+    yield takeEvery('FETCH_FEATURED', fetchFeatured);
+
+    // listen for SEND_UPDATES command
+    yield takeEvery('SEND_UPDATES', updateMovies);
 }
 
 function* fetchAllMovies() {
@@ -36,6 +39,30 @@ function* fetchAllMovies() {
         console.log('get all error');
     }
         
+}
+
+// saga generator to /api/movie PUT
+function* updateMovies(action) {
+
+    // try executes if there's no error
+    try {
+
+        // run axios put
+        yield axios.put(`api/movie/?movieId=${action.payload.idToUpdate}`, action.payload.updateMovies);
+
+        // run the get requests to populate updates
+        yield put({
+            type: 'FETCH_FEATURED_GENRES'
+        });
+        yield put({
+            type: 'FETCH_FEATURED'
+        });
+    }
+
+    // catch for error (e)
+    catch (e) {
+        console.error(`Updates cannot be committed at this timw ${e}`)
+    }
 }
 
 // saga generator to run the /api/movie POST

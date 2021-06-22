@@ -66,7 +66,7 @@ function EditMovie({ navigateBack }) {
         // dispatch to root saga
         dispatch({
             type: 'SEND_UPDATES',
-            payload: updatedMovieDetails
+            payload: {updates: updatedMovieDetails, idToUpdate: movieId}
         });
 
     }
