@@ -74,12 +74,12 @@ function* fetchMovieDetails(action) {
         // use put to set reducer with response data
         yield put({
             type: 'SET_GENRES',
-            payload: response.data
+            payload: response.data.genreList
         });
 
         yield put({
             type: 'SET_FEATURED_GENRES',
-            payload: response.data
+            payload: response.data.featured[0].genre
         })
     }
 
@@ -133,9 +133,9 @@ const movies = (state = {featured: {}, movieList: []}, action) => {
 const genres = (state = {featured: [], genreList: []}, action) => {
     switch (action.type) {
         case 'SET_FEATURED_GENRES':
-            return {...state, featured: action.payload.featured[0].genre};
+            return {...state, featured: action.payload};
         case 'SET_GENRES':
-            return {...state, genreList: action.payload.genreList};
+            return {...state, genreList: action.payload};
         default:
             return state;
     }

@@ -20,13 +20,14 @@ function DetailsView() {
 
     // bring in both reducer states
     const movies = useSelector(store => store.movies);
-    const genres = useSelector(store => store.genres[0]);
+    const genres = useSelector(store => store.genres);
 
     // on page load dispatch to get request saga
     // with the payload of the movie clicked
     // and dispatch to the rootSaga to update the state
     // of the featured movie 
     useEffect(() => {
+        console.log('in UseEffect');
         dispatch({
             type: 'FETCH_FEATURED_GENRES',
             payload: movieId
@@ -60,7 +61,7 @@ function DetailsView() {
     }
 
     console.log(movies);
-    console.log(genres?.genre);
+    console.log(genres);
     return (
         <>
             <Router>
@@ -73,7 +74,7 @@ function DetailsView() {
 
                     <h4>Movie Genres</h4>
                     <ul className="genre-list">
-                        {genres?.genre.map( (genre, i) => {
+                        {genres.featured.map( (genre, i) => {
                             return <li key={i} >{genre}</li>
                         })}
                     </ul>
@@ -83,7 +84,7 @@ function DetailsView() {
                 </Route>
 
                 <Route path={`${path}/edit`}>
-                    <EditMovie navigateBack={navigateBack} movies={movies} genres={genres}f />
+                    <EditMovie navigateBack={navigateBack} movies={movies} genres={genres} />
                 </Route>
             </Router>
         </>

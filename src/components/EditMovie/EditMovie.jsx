@@ -7,106 +7,90 @@ import { useParams } from 'react-router-dom';
 // bring in useDispatch
 import { useDispatch, useSelector } from 'react-redux'
 
-function EditMovie({navigateBack}) {
+function EditMovie({ navigateBack }) {
 
-    // bring in both reducer states
-    const movies = useSelector(store => store.movies);
-    const genres = useSelector(store => store.genres[0]);
-
-    // make useDispatch available as dispatch
-    const dispatch = useDispatch();
+    // make the movieId from the params available
+    const { movieId } = useParams();
 
     // on page load dispatch to get request saga
     // with the payload of the movie clicked
     // and dispatch to the rootSaga to update the state
     // of the featured movie 
     useEffect(() => {
-        dispatch({
-            type: 'FETCH_FEATURED_GENRES',
-            payload: movieId
-        });
+        console.log('in UseEffect');
         dispatch({
             type: 'FETCH_FEATURED',
             payload: movieId
         });
+        dispatch({
+            type: 'FETCH_FEATURED_GENRES',
+            payload: movieId
+        });
     }, []);
 
-    // make the movieId from the params available
-    const { movieId } = useParams();
+    // bring in both reducer states
+    const movies = useSelector(store => store.movies);
+    const genreList = useSelector(store => store.genres.genreList)
+
+    // make useDispatch available as dispatch
+    const dispatch = useDispatch();
 
     // set useState for the new movie details
     const [updatedMovieDetails, setUpdatedMovieDetails] = useState({
         title: movies.featured.title,
         description: movies.featured.description,
-        genre: genres?.genre
+        genres: []
     })
+
+    // function to track updated to the movie details
+    const updateMovie = event => {
+        switch (event.target.name){
+            case 'genres':
+                return setUpdatedMovieDetails({...updatedMovieDetails, [event.target.name]: [...updatedMovieDetails.genres, event.target.value]})
+            case 'description':
+                event.preventDefault();
+                return setUpdatedMovieDetails({...updatedMovieDetails, [event.target.name]: event.target.value})
+            case 'title':
+                event.preventDefault();
+                return setUpdatedMovieDetails({...updatedMovieDetails, [event.target.name]: event.target.value})
+        }
+
+    }
+
+    // function to send the updated values to the server
+    const sendUpdates = event => {
+
+        // stop page loading
+        event.preventDefault();
+
+        // dispatch to root saga
+        dispatch({
+            type: 'SEND_UPDATES',
+            payload: updatedMovieDetails
+        });
+
+    }
 
     console.log(updatedMovieDetails);
     return (
         <>
-            <form>
+            <form onSubmit={sendUpdates}>
 
                 <label htmlFor="featured_title">Movie Title:
-                    <input type="text" id="featured_title" value={updatedMovieDetails.title} />
+                    <input onChange={updateMovie} name="title" type="text" id="featured_title" value={updatedMovieDetails.title} />
                 </label>
-                <br/>
-                <label htmlFor="featured_description">Movie Description: 
-                    <input type="text" id="featured_description" value={updatedMovieDetails.description} />
+                <br />
+                <label htmlFor="featured_description">Movie Description:
+                    <input onChange={updateMovie} name="description" type="text" id="featured_description" value={updatedMovieDetails.description} />
                 </label>
 
-                <div>
-                    <label htmlFor="adventure">Adventure
-                        <input value="1" type="checkbox" id="adventure" />
-                    </label>
-                    <br/>
-                    <label htmlFor="animated">Animated
-                        <input value="2" type="checkbox" id="animated" />
-                    </label>
-                    <br/>
-                    <label htmlFor="biographical">Biographical                    
-                        <input value="3" type="checkbox" id="biographical" />
-                    </label>
-                    <br/>
-                    <label htmlFor="comedy">Comedy
-                        <input value="4" type="checkbox" id="comedy" />
-                    </label>
-                    <br/>
-                    <label htmlFor="disaster">Disaster
-                        <input value="5" type="checkbox" id="disaster" />
-                    </label>
-                    <br/>
-                    <label htmlFor="drama">Drama
-                        <input value="6" type="checkbox" id="drama" />
-                    </label>
-                    <br/>
-                    <label htmlFor="epic">Epic
-                        <input value="7" type="checkbox" id="epic" />
-                    </label>
-                    <br/>
-                    <label htmlFor="fantasy">Fantasy
-                        <input value="8" type="checkbox" id="fantasy" />
-                    </label>
-                    <br/>
-                    <label htmlFor="musical">Musical
-                        <input value="9" type="checkbox" id="musical" />
-                    </label>
-                    <br/>
-                    <label htmlFor="romantic">Romantic
-                        <input value="10" type="checkbox" id="romantic" />
-                    </label>
-                    <br/>
-                    <label htmlFor="sci-fi">Science Fiction
-                        <input value="11" type="checkbox" id="sci-fi" />
-                    </label>
-                    <br/>
-                    <label htmlFor="space-opera">Space-Opera
-                        <input value="12" type="checkbox" id="space-opera" />
-                    </label>
-                    <br/>
-                    <label htmlFor="superhero">Superhero
-                        <input value="13" type="checkbox" id="superhero" />
-                    </label>
-                </div>
+                {genreList.map((genre, i) => {
+                    return <div key={i} >
+                            <label htmlFor={genre.name}>{genre.name}
+                                <input onChange={updateMovie} value={i + 1} type="checkbox" id={genre.name} name="genres" />
+                            </label>
+                           </div>
+                })}
 
                 <input type="submit" value="save" />
                 <input onClick={navigateBack} type="button" value="cancel" />
