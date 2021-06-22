@@ -1,6 +1,3 @@
-// bring in useHistory
-import { useHistory, useParams } from 'react-router-dom';
-
 // bring in useEffect
 import { useEffect } from 'react';
 
@@ -11,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import EditMovie from '../EditMovie/EditMovie'
 
 // bring in route capability
-import {HashRouter as Router, Route, useRouteMatch} from 'react-router-dom';
+import {HashRouter as Router, Route, useRouteMatch, useHistory, useParams} from 'react-router-dom';
 
 // bring in css
 import './DetailsView.css'
@@ -31,7 +28,7 @@ function DetailsView() {
     // of the featured movie 
     useEffect(() => {
         dispatch({
-            type: 'FETCH_GENRES',
+            type: 'FETCH_FEATURED_GENRES',
             payload: movieId
         });
         dispatch({
@@ -86,7 +83,7 @@ function DetailsView() {
                 </Route>
 
                 <Route path={`${path}/edit`}>
-                    <EditMovie />
+                    <EditMovie navigateBack={navigateBack} movies={movies} genres={genres}f />
                 </Route>
             </Router>
         </>

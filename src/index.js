@@ -19,7 +19,7 @@ function* rootSaga() {
     yield takeEvery('ADD_MOVIE', addNewMovie)
 
     // listen for the FETCH_GENRES command
-    yield takeEvery('FETCH_GENRES', fetchMovieDetails);
+    yield takeEvery('FETCH_FEATURED_GENRES', fetchMovieDetails);
 
     // listen for the FETCH_FEATURED command
     yield takeEvery('FETCH_FEATURED', fetchFeatured)
@@ -69,11 +69,18 @@ function* fetchMovieDetails(action) {
         // what axios returns off the get
         const response = yield axios.get(`/api/genre/?movieId=${action.payload}`)
 
+        console.log(response.data);
+
         // use put to set reducer with response data
         yield put({
             type: 'SET_GENRES',
             payload: response.data
         });
+
+        yield put({
+            type: 'SET_FEATURED_GENRES',
+            payload: response.data
+        })
     }
 
     // catch for err
@@ -123,10 +130,12 @@ const movies = (state = {featured: {}, movieList: []}, action) => {
 }
 
 // Used to store the movie genres
-const genres = (state = [], action) => {
+const genres = (state = {featured: [], genreList: []}, action) => {
     switch (action.type) {
+        case 'SET_FEATURED_GENRES':
+            return {...state, featured: action.payload.featured[0].genre};
         case 'SET_GENRES':
-            return action.payload;
+            return {...state, genreList: action.payload.genreList};
         default:
             return state;
     }
