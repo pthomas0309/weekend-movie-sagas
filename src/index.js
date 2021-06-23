@@ -19,10 +19,13 @@ function* rootSaga() {
     yield takeEvery('ADD_MOVIE', addNewMovie)
 
     // listen for the FETCH_GENRES command
-    yield takeEvery('FETCH_GENRES', fetchMovieDetails);
+    yield takeEvery('FETCH_FEATURED_GENRES', fetchMovieDetails);
 
     // listen for the FETCH_FEATURED command
-    yield takeEvery('FETCH_FEATURED', fetchFeatured)
+    yield takeEvery('FETCH_FEATURED', fetchFeatured);
+
+    // listen for SEND_UPDATES command
+    yield takeEvery('SEND_UPDATES', updateMovies);
 }
 
 function* fetchAllMovies() {
@@ -36,6 +39,32 @@ function* fetchAllMovies() {
         console.log('get all error');
     }
         
+}
+
+// saga generator to /api/movie PUT
+function* updateMovies(action) {
+
+    // try executes if there's no error
+    try {
+
+        // run axios put
+        yield axios.put(`api/movie/?movieId=${action.payload.idToUpdate}`, action.payload.updates);
+
+        // run the get requests to populate updates
+        yield put({
+            type: 'FETCH_FEATURED_GENRES',
+            payload: action.payload.idToUpdate
+        });
+        yield put({
+            type: 'FETCH_FEATURED',
+            payload: action.payload.idToUpdate
+        });
+    }
+
+    // catch for error (e)
+    catch (e) {
+        console.error(`Updates cannot be committed at this time ${e}`)
+    }
 }
 
 // saga generator to run the /api/movie POST
@@ -69,11 +98,18 @@ function* fetchMovieDetails(action) {
         // what axios returns off the get
         const response = yield axios.get(`/api/genre/?movieId=${action.payload}`)
 
+        console.log(response.data);
+
         // use put to set reducer with response data
         yield put({
             type: 'SET_GENRES',
-            payload: response.data
+            payload: response.data.genreList
         });
+
+        yield put({
+            type: 'SET_FEATURED_GENRES',
+            payload: response.data.featured[0].genre
+        })
     }
 
     // catch for err
@@ -123,10 +159,12 @@ const movies = (state = {featured: {}, movieList: []}, action) => {
 }
 
 // Used to store the movie genres
-const genres = (state = [], action) => {
+const genres = (state = {featured: [], genreList: []}, action) => {
     switch (action.type) {
+        case 'SET_FEATURED_GENRES':
+            return {...state, featured: action.payload};
         case 'SET_GENRES':
-            return action.payload;
+            return {...state, genreList: action.payload};
         default:
             return state;
     }
