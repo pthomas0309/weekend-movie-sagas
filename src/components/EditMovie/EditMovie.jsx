@@ -2,12 +2,15 @@
 import { useState, useEffect } from 'react';
 
 // bring in useParams
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 // bring in useDispatch
 import { useDispatch, useSelector } from 'react-redux'
 
-function EditMovie({ navigateBack }) {
+function EditMovie() {
+
+    // make useHistory available as history
+    const history = useHistory();
 
     // make the movieId from the params available
     const { movieId } = useParams();
@@ -69,6 +72,19 @@ function EditMovie({ navigateBack }) {
             payload: {updates: updatedMovieDetails, idToUpdate: movieId}
         });
 
+        // move back to details page
+        history.push(`/${movieId}/details`)
+
+    }
+
+    // function to move back to details page
+    const navigateBack = () => {
+
+        // alert for redirect
+        alert('Going back to previous page');
+        
+        // use history to move to previous url
+        history.goBack();
     }
 
     console.log(updatedMovieDetails);
@@ -83,6 +99,8 @@ function EditMovie({ navigateBack }) {
                 <label htmlFor="featured_description">Movie Description:
                     <input onChange={updateMovie} name="description" type="text" id="featured_description" value={updatedMovieDetails.description} />
                 </label>
+
+                <h4>To Be Implemented: UPDATE GENRES</h4>
 
                 {genreList.map((genre, i) => {
                     return <div key={i} >

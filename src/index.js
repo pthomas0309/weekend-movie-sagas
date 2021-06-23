@@ -48,20 +48,22 @@ function* updateMovies(action) {
     try {
 
         // run axios put
-        yield axios.put(`api/movie/?movieId=${action.payload.idToUpdate}`, action.payload.updateMovies);
+        yield axios.put(`api/movie/?movieId=${action.payload.idToUpdate}`, action.payload.updates);
 
         // run the get requests to populate updates
         yield put({
-            type: 'FETCH_FEATURED_GENRES'
+            type: 'FETCH_FEATURED_GENRES',
+            payload: action.payload.idToUpdate
         });
         yield put({
-            type: 'FETCH_FEATURED'
+            type: 'FETCH_FEATURED',
+            payload: action.payload.idToUpdate
         });
     }
 
     // catch for error (e)
     catch (e) {
-        console.error(`Updates cannot be committed at this timw ${e}`)
+        console.error(`Updates cannot be committed at this time ${e}`)
     }
 }
 

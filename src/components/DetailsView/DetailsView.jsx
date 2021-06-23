@@ -50,10 +50,10 @@ function DetailsView() {
     const navigateBack = () => {
 
         // alert for redirect
-        alert('Going back to previous page');
+        alert('Going back to Home page');
 
         // .goBack navigates to previous page
-        history.goBack();
+        history.push('/');
     };
 
     const navigateToEdit = () => {
@@ -84,7 +84,7 @@ function DetailsView() {
                 </Route>
 
                 <Route path={`${path}/edit`}>
-                    <EditMovie navigateBack={navigateBack} movies={movies} genres={genres} />
+                    <EditMovie />
                 </Route>
             </Router>
         </>
