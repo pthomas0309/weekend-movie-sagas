@@ -56,4 +56,4 @@ List technologies and frameworks here
 Thanks to [Prime Digital Academy](www.primeacademy.io) who equipped and helped me to make this application a reality.
 
 ## Support
-If you have suggestions or issues, please email me at [preston.thomas355@gmail.com](www.google.com)
+If you have suggestions or issues, please email me at preston.thomas355@gmail.com
